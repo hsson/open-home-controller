@@ -24,9 +24,11 @@ const (
 
 var (
 	serialPort *serial.Port
+	modules    []Module
 )
 
 func init() {
+	// Init connection to Arduino
 	log.Println("Finding Arduino...")
 	arduino := findArduino()
 	if arduino == "" {
@@ -44,6 +46,17 @@ func init() {
 	serialPort = s
 	log.Println("Port opened")
 	time.Sleep(initTime)
+
+	// Read config
+	log.Println("Initializing modules...")
+	modules, err = initModules()
+	if err != nil {
+		log.Fatal("Could not read config\n", err)
+		os.Exit(1)
+	}
+	log.Println("Module config loaded")
+
+	// DONE
 	log.Println("Initialization complete")
 
 }
