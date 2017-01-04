@@ -1,17 +1,10 @@
-package main
+package hardware
 
 import (
-	"bufio"
-	"fmt"
 	"log"
-
-	"time"
-
 	"os"
-
-	"strconv"
-
 	"strings"
+	"time"
 
 	"github.com/tarm/serial"
 )
@@ -30,7 +23,8 @@ var (
 	modules    []Module
 )
 
-func init() {
+// Initialize sets up the connection to the hardware and reads the config
+func Initialize() {
 	// Init connection to Arduino
 	log.Println("Finding Arduino...")
 	arduino := findArduino()
@@ -64,26 +58,8 @@ func init() {
 
 }
 
-func main() {
-	for {
-		reader := bufio.NewReader(os.Stdin)
-		fmt.Print("Enter pin: ")
-		pin, _ := reader.ReadString('\n')
-		pinInt, _ := strconv.Atoi(pin[:len(pin)-1])
-		fmt.Println(pinInt)
-		fmt.Print("Enter action: ")
-		action, _ := reader.ReadString('\n')
-		success := sendCommand(pinInt, action[:1])
-		log.Println("Success:", success)
-
-		for _, module := range modules {
-			vals := readStatus(module.Pin)
-			fmt.Println(vals)
-		}
-	}
-}
-
-func readStatus(pin int) []string {
+// ReadStatus gets the value of a given hardware module
+func ReadStatus(pin int) []string {
 	command := Command{pin, statusAction}
 	log.Println("Reading status from pin:", pin)
 	n, err := serialPort.Write(command.parseBytes())
@@ -100,7 +76,8 @@ func readStatus(pin int) []string {
 	return strings.Split(res, ";")
 }
 
-func sendCommand(pin int, action string) bool {
+// SendCommand sends an action to a given hardware modulue
+func SendCommand(pin int, action string) bool {
 	command := Command{pin, action}
 	log.Println("Sending:", command.parse())
 	n, err := serialPort.Write(command.parseBytes())
