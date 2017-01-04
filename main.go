@@ -1,11 +1,15 @@
 package main
 
 import (
+	"bufio"
+	"fmt"
 	"log"
 
 	"time"
 
 	"os"
+
+	"strconv"
 
 	"github.com/tarm/serial"
 )
@@ -43,7 +47,23 @@ func init() {
 }
 
 func main() {
-	n, err := serialPort.Write([]byte("ping"))
+	for {
+		reader := bufio.NewReader(os.Stdin)
+		fmt.Print("Enter pin: ")
+		pin, _ := reader.ReadString('\n')
+		pinInt, _ := strconv.Atoi(pin[:len(pin)-1])
+		fmt.Println(pinInt)
+		fmt.Print("Enter action: ")
+		action, _ := reader.ReadString('\n')
+		sendCommand(uint16(pinInt), action[:1])
+	}
+}
+
+func sendCommand(pin uint16, action string) {
+	command := Command{pin, action}
+	log.Println("Sending:", command.parse())
+	n, err := serialPort.Write(command.parseBytes())
+
 	if err != nil {
 		log.Fatal(err)
 	}
