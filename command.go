@@ -5,12 +5,16 @@ import (
 )
 
 type Command struct {
-	Pin    uint16
+	Pin    int
 	Action string
 }
 
 func (c *Command) parse() string {
-	parsed := strconv.FormatUint(uint64(c.Pin), 10)
+	var parsed string
+	if c.Pin < 10 {
+		parsed = "0"
+	}
+	parsed = parsed + strconv.Itoa(c.Pin)
 	parsed = parsed + c.Action
 	return parsed
 }

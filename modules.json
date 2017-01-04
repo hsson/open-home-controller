@@ -1,1 +1,2 @@
-[{ "ID": 1, "Name": "Kökslampa", "Description": "Lampan i köket", "Pin": 7, "Type": 0 }]
+[{ "ID": 1, "Name": "Kökslampa", "Description": "Lampan i köket", "Pin": 7, "Type": 0 },
+{"ID": 2, "Name": "Ljussensor", "Description": "Läser av ljusstyrka", "Pin": 16, "Type": 1}]
