@@ -15,9 +15,11 @@ import (
 )
 
 const (
-	baudRate    = 115200
-	initTime    = time.Second * 2
-	readTimeout = time.Second * 5
+	baudRate     = 115200
+	initTime     = time.Second * 2
+	readTimeout  = time.Second * 5
+	statusAction = "s"
+	trueLiteral  = "True"
 )
 
 var (
@@ -55,11 +57,12 @@ func main() {
 		fmt.Println(pinInt)
 		fmt.Print("Enter action: ")
 		action, _ := reader.ReadString('\n')
-		sendCommand(uint16(pinInt), action[:1])
+		success := sendCommand(uint16(pinInt), action[:1])
+		log.Println("Success:", success)
 	}
 }
 
-func sendCommand(pin uint16, action string) {
+func sendCommand(pin uint16, action string) bool {
 	command := Command{pin, action}
 	log.Println("Sending:", command.parse())
 	n, err := serialPort.Write(command.parseBytes())
@@ -73,5 +76,6 @@ func sendCommand(pin uint16, action string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("%q", buf[:n])
+	res := string(buf[:n])
+	return res == trueLiteral
 }
