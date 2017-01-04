@@ -17,6 +17,7 @@ type Route struct {
 type Routes []Route
 
 var routes = Routes{
-	// Projects
+	// Hardware modules
 	Route{"IndexSensors", "GET", "/api/sensors", false, sensor.Index},
+	Route{"GetModuleValue", "GET", "/api/sensors/{id:[0-9]+}", false, sensor.GetModuleValue},
 }

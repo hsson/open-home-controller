@@ -13,11 +13,11 @@ const (
 
 // Module represents a physical module connected to an Arduino
 type Module struct {
-	ID          int
-	Name        string
-	Description string
-	Pin         int
-	Type        int
+	ID          int    `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Pin         int    `json:"pin"`
+	Type        int    `json:"type"`
 }
 
 func initModules() ([]Module, error) {
