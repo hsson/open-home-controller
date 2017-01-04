@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/hsson/open-home-controller/modules/modules/sensor"
+	"github.com/hsson/open-home-controller/modules/sensor"
 )
 
 type Route struct {
