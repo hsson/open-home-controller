@@ -94,3 +94,8 @@ func SendCommand(pin int, action string) bool {
 	res := string(buf[:n])
 	return res == trueLiteral
 }
+
+// GetModules returns the available hardware modules
+func GetModules() []Module {
+	return modules
+}

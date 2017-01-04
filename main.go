@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/hsson/hardware"
+	"github.com/hsson/open-home-controller/hardware"
 )
 
 func main() {
