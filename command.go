@@ -14,3 +14,7 @@ func (c *Command) parse() string {
 	parsed = parsed + c.Action
 	return parsed
 }
+
+func (c *Command) parseBytes() []byte {
+	return []byte(c.parse())
+}

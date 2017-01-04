@@ -1,9 +1,7 @@
 package main
 
 import (
-	"io/ioutil"
 	"log"
-	"strings"
 
 	"time"
 
@@ -18,39 +16,42 @@ const (
 	readTimeout = time.Second * 5
 )
 
-func main() {
+var (
+	serialPort *serial.Port
+)
+
+func init() {
+	log.Println("Finding Arduino...")
 	arduino := findArduino()
 	if arduino == "" {
-		log.Fatal("Couldn't find Arduino")
+		log.Fatalln("Could not find Arduino")
 		os.Exit(1)
 	}
-	c := &serial.Config{Name: arduino, Baud: baudRate, ReadTimeout: readTimeout}
-	s, err := serial.OpenPort(c)
-	if err != nil {
-		log.Fatal(err)
-	}
-	time.Sleep(initTime)
+	log.Println("Arduino found on:", arduino)
 
-	n, err := s.Write([]byte("ping"))
+	log.Println("Initializing port...")
+	config := &serial.Config{Name: arduino, Baud: baudRate, ReadTimeout: readTimeout}
+	s, err := serial.OpenPort(config)
+	if err != nil {
+		log.Fatalln("Could not open port!\n", err)
+	}
+	serialPort = s
+	log.Println("Port opened")
+	time.Sleep(initTime)
+	log.Println("Initialization complete")
+
+}
+
+func main() {
+	n, err := serialPort.Write([]byte("ping"))
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	buf := make([]byte, 128)
-	n, err = s.Read(buf)
+	n, err = serialPort.Read(buf)
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.Printf("%q", buf[:n])
-}
-
-// Finds the serial port for the Arduino
-func findArduino() string {
-	contents, _ := ioutil.ReadDir("/dev")
-	for _, f := range contents {
-		if strings.Contains(f.Name(), "tty.usbserial") || strings.Contains(f.Name(), "ttyACM") {
-			return "/dev/" + f.Name()
-		}
-	}
-	return ""
 }
