@@ -20,4 +20,5 @@ var routes = Routes{
 	// Hardware modules
 	Route{"IndexSensors", "GET", "/api/sensors", false, sensor.Index},
 	Route{"GetModuleValue", "GET", "/api/sensors/{id:[0-9]+}", false, sensor.GetModuleValue},
+	Route{"PostCommand", "POST", "/api/sensors/{id:[0-9]+}/{command:[a-z]}", false, sensor.PostCommand},
 }

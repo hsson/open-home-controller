@@ -20,6 +20,31 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// PostCommand sends a specified command to a specified module
+func PostCommand(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
+	command := vars["command"]
+
+	// This shouldn't happen since the mux only accepts numbers to this route
+	if err != nil {
+		http.Error(w, "Invalid Id, please try again.", http.StatusBadRequest)
+		return
+	}
+
+	modules := hardware.GetModules()
+	module, err := getModuleByID(modules, id)
+
+	if err != nil {
+		http.NotFound(w, r)
+		return
+	}
+
+	success := hardware.SendCommand(module.Pin, command)
+	enc := json.NewEncoder(w)
+	err = enc.Encode(success)
+}
+
 // GetModuleValue gets the value of a specific module
 func GetModuleValue(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
