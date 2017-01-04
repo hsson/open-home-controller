@@ -12,6 +12,7 @@ import (
 
 // Index lists all available modules
 func Index(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("Content-Type", "application/json")
 	modules := hardware.GetModules()
 	enc := json.NewEncoder(w)
 	err := enc.Encode(modules)
@@ -22,6 +23,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 
 // PostCommand sends a specified command to a specified module
 func PostCommand(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("Content-Type", "application/json")
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	command := vars["command"]
@@ -42,11 +44,12 @@ func PostCommand(w http.ResponseWriter, r *http.Request) {
 
 	success := hardware.SendCommand(module.Pin, command)
 	enc := json.NewEncoder(w)
-	err = enc.Encode(success)
+	err = enc.Encode(successStruct{success})
 }
 
 // GetModuleValue gets the value of a specific module
 func GetModuleValue(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("Content-Type", "application/json")
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 

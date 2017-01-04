@@ -6,6 +6,10 @@ import (
 	"github.com/hsson/open-home-controller/hardware"
 )
 
+type successStruct struct {
+	Success bool `json:"success"`
+}
+
 func getModuleByID(modules []hardware.Module, id int) (hardware.Module, error) {
 	for _, module := range modules {
 		if module.ID == id {
