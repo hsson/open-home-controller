@@ -15,15 +15,25 @@ func NewRouter() *mux.Router {
 			Methods(route.Method).
 			Path(route.Pattern).
 			Name(route.Name).
-			Handler(corsHandler(route.HandlerFunc))
+			Handler(route.HandlerFunc)
+		if route.Method == "POST" {
+			router.
+				Methods("OPTIONS").
+				Path(route.Pattern).
+				Name(route.Name).
+				Handler(corsHandler(route.HandlerFunc))
+		}
 	}
-
 	return router
 }
-
 func corsHandler(h http.Handler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Add("Access-Control-Allow-Origin", "*")
-		h.ServeHTTP(w, r)
+		if r.Method == "OPTIONS" {
+			w.Header().Add("Access-Control-Allow-Origin", "*")
+			w.Header().Add("Access-Control-Allow-Headers", "Content-Type")
+			w.Header().Add("Content-Type", "text/html; charset=utf-8")
+		} else {
+			h.ServeHTTP(w, r)
+		}
 	}
 }

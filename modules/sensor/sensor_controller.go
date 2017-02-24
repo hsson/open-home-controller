@@ -12,6 +12,7 @@ import (
 
 // Index lists all available modules
 func Index(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("Access-Control-Allow-Origin", "*")
 	w.Header().Add("Content-Type", "application/json")
 	modules := hardware.GetModules()
 	enc := json.NewEncoder(w)
@@ -23,6 +24,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 
 // PostCommand sends a specified command to a specified module
 func PostCommand(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("Access-Control-Allow-Origin", "*")
 	w.Header().Add("Content-Type", "application/json")
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
@@ -49,6 +51,7 @@ func PostCommand(w http.ResponseWriter, r *http.Request) {
 
 // GetModuleValue gets the value of a specific module
 func GetModuleValue(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("Access-Control-Allow-Origin", "*")
 	w.Header().Add("Content-Type", "application/json")
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
